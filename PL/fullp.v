@@ -172,20 +172,20 @@ module fullp(
     .ex_read_data2_forward_sel      (ex_read_data2_forward_sel)
     );
 
-    forward_mux32 u_forward_mux_a(
+    forward_mux u_forward_mux_0(
         .in0(id_ex_read_data1),
         .in1(wb_write_data),
         .in2(ex_mem_alu_result),
         .sel(ex_read_data1_forward_sel),
-        .y(ex_read_data1_forwarded)
+        .out(ex_read_data1_forwarded)
     );
     
-    forward_mux32 u_forward_mux_b(
+    forward_mux u_forward_mux_1(
         .in0(id_ex_read_data2),
         .in1(wb_write_data),
         .in2(ex_mem_alu_result),
         .sel(ex_read_data2_forward_sel),
-        .y(ex_read_data2_forwarded)
+        .out(ex_read_data2_forwarded)
     );
 
 endmodule

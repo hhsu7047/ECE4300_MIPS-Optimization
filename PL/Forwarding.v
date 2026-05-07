@@ -14,7 +14,7 @@ module forwarding_unit(
         ex_read_data1_forward_sel = 2'b00;
         ex_read_data2_forward_sel = 2'b00;
 
-        // EX/MEM has priority, but not for lw
+ 
         if (ex_mem_reg_write && !ex_mem_memread &&
             (ex_mem_rd != 5'd0) &&
             (ex_mem_rd == id_ex_rs))

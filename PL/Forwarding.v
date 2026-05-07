@@ -1,0 +1,54 @@
+module forwarding_unit(
+    input  wire       ex_mem_reg_write,
+    input  wire       ex_mem_memread,
+    input  wire [4:0] ex_mem_rd,
+    input  wire       mem_wb_reg_write,
+    input  wire [4:0] mem_wb_rd,
+    input  wire [4:0] id_ex_rs,
+    input  wire [4:0] id_ex_rt,
+    output reg  [1:0] ex_read_data1_forward_sel,
+    output reg  [1:0] ex_read_data2_forward_sel
+);
+
+    always @(*) begin
+        ex_read_data1_forward_sel = 2'b00;
+        ex_read_data2_forward_sel = 2'b00;
+
+        // EX/MEM has priority, but not for lw
+        if (ex_mem_reg_write && !ex_mem_memread &&
+            (ex_mem_rd != 5'd0) &&
+            (ex_mem_rd == id_ex_rs))
+            ex_read_data1_forward_sel = 2'b10;
+        else if (mem_wb_reg_write &&
+                 (mem_wb_rd != 5'd0) &&
+                 (mem_wb_rd == id_ex_rs))
+            ex_read_data1_forward_sel = 2'b01;
+
+        if (ex_mem_reg_write && !ex_mem_memread &&
+            (ex_mem_rd != 5'd0) &&
+            (ex_mem_rd == id_ex_rt))
+            ex_read_data2_forward_sel = 2'b10;
+        else if (mem_wb_reg_write &&
+                 (mem_wb_rd != 5'd0) &&
+                 (mem_wb_rd == id_ex_rt))
+            ex_read_data2_forward_sel = 2'b01;
+    end
+endmodule
+
+module forward_mux32(
+    input  wire [31:0] in0,   // original ID/EX value
+    input  wire [31:0] in1,   // MEM/WB forwarded value
+    input  wire [31:0] in2,   // EX/MEM forwarded value
+    input  wire [1:0]  sel,
+    output reg  [31:0] y
+);
+
+    always @(*) begin
+        case (sel)
+            2'b00: y = in0;
+            2'b01: y = in1;
+            2'b10: y = in2;
+            default: y = in0;
+        endcase
+    end
+endmodule

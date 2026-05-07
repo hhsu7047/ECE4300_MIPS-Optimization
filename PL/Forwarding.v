@@ -16,17 +16,17 @@ module forwarding_unit(
 
  
         if (ex_mem_reg_write && !ex_mem_memread &&
-            (ex_mem_rd == id_ex_rs))
+            ex_mem_rd == id_ex_rs)
             ex_read_data1_forward_sel = 2'b10;
         else if (mem_wb_reg_write &&
-                 (mem_wb_rd == id_ex_rs))
+                 mem_wb_rd == id_ex_rs)
             ex_read_data1_forward_sel = 2'b01;
 
         if (ex_mem_reg_write && !ex_mem_memread &&
             (ex_mem_rd == id_ex_rt))
             ex_read_data2_forward_sel = 2'b10;
         else if (mem_wb_reg_write &&
-                 (mem_wb_rd == id_ex_rt))
+                 mem_wb_rd == id_ex_rt)
             ex_read_data2_forward_sel = 2'b01;
     end
 endmodule
